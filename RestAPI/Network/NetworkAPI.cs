@@ -13,6 +13,17 @@ namespace Chetch.RestAPI.Network
         {
         }
 
+        public class Token : DataObject
+        {
+            public String Value
+            {
+                get
+                {
+                    return ContainsKey("token") ? this["token"].ToString() : null;
+                }
+            }
+        }
+
         public class Services : Dictionary<String, Service>, IRestAPIObject
         {
             static private readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
@@ -46,6 +57,19 @@ namespace Chetch.RestAPI.Network
         {
             Services services = GetServices();
             return services.ContainsKey(serviceName) ? services[serviceName] : null;
+        }
+
+
+        public Token GetToken(int serviceID, String clientName)
+        {
+            String stub = String.Format("token?service_id={0}&client_name={1}", serviceID, clientName);
+            return Get<Token>(stub);
+        }
+
+        public Token GetToken(String serviceName, String clientName)
+        {
+            Service s = GetService(serviceName);
+            return GetToken(s.ID, clientName);
         }
     }
 }
