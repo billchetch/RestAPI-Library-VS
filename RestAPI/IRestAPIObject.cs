@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RestAPI
+namespace Chetch.RestAPI
 {
-    public class Class1
+    public interface IRestAPIObject
     {
+        void Parse(String data);
+
+        String Serialize();
     }
 }
