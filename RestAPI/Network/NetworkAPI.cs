@@ -9,6 +9,8 @@ namespace Chetch.RestAPI.Network
 {
     public class NetworkAPI : APIService
     {
+        public const String CHETCH_MESSAGING_SERVICE = "Chetch Messaging";
+
         public class Service : DataObject
         {
         }
