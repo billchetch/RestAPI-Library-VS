@@ -15,6 +15,18 @@ namespace Chetch.RestAPI.Network
 
         public class Token : DataObject
         {
+            public Token()
+            {
+
+            }
+
+            public Token(int serviceID, String clientName, String tokenValue)
+            {
+                this["service_id"] = serviceID;
+                this["client_name"] = clientName;
+                this["token"] = tokenValue;
+            }
+
             public String Value
             {
                 get
@@ -70,6 +82,12 @@ namespace Chetch.RestAPI.Network
         {
             Service s = GetService(serviceName);
             return GetToken(s.ID, clientName);
+        }
+
+        public Token SaveToken(int serviceID, String clientName, String tokenValue)
+        {
+            Token token = new Token(serviceID, clientName, tokenValue);
+            return Put<Token>("token", token);
         }
     }
 }

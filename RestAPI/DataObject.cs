@@ -22,7 +22,7 @@ namespace Chetch.RestAPI
 
         public string Serialize()
         {
-            throw new NotImplementedException();
+            return jsonSerializer.Serialize(this);
         }
 
         public int ID

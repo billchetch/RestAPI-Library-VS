@@ -59,7 +59,6 @@ catch (Exception e)
             {
                 String url = ApiURL(stub);
 
-                //HttpResponseMessage response = await _httpClient.PutAsync("http://127.0.0.1:8001/api/token", data);
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
                 response.EnsureSuccessStatusCode();
                 String responseBody = await response.Content.ReadAsStringAsync();
@@ -71,10 +70,8 @@ catch (Exception e)
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw e;
             }
-
-            return default(T);
         }
 
         public T Get<T>(String stub) where T: IRestAPIObject, new()
@@ -82,5 +79,34 @@ catch (Exception e)
             return Task.Run(() => GetAsync<T>(stub)).GetAwaiter().GetResult();
         }
 
+
+        async public Task<T> PutAsync<T>(String stub, T t) where T : IRestAPIObject, new()
+        {
+            try
+            {
+                String url = ApiURL(stub);
+
+                String json = t.Serialize();
+                var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await _httpClient.PutAsync(url, data);
+                response.EnsureSuccessStatusCode();
+                String responseBody = await response.Content.ReadAsStringAsync();
+
+                T newT = new T();
+                newT.Parse(responseBody);
+
+                return newT;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public T Put<T>(String stub, T t) where T : IRestAPIObject, new()
+        {
+            return Task.Run(() => PutAsync<T>(stub, t)).GetAwaiter().GetResult();
+        }
     }
 }
