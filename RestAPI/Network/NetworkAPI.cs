@@ -20,7 +20,7 @@ namespace Chetch.RestAPI.Network
 
             }
 
-            public Token(int serviceID, String clientName, String tokenValue)
+            public Token(int serviceID, String clientName, String tokenValue = null)
             {
                 this["service_id"] = serviceID;
                 this["client_name"] = clientName;
@@ -32,6 +32,11 @@ namespace Chetch.RestAPI.Network
                 get
                 {
                     return ContainsKey("token") ? this["token"].ToString() : null;
+                }
+
+                set
+                {
+                    this["token"] = value;
                 }
             }
         }
@@ -87,6 +92,11 @@ namespace Chetch.RestAPI.Network
         public Token SaveToken(int serviceID, String clientName, String tokenValue)
         {
             Token token = new Token(serviceID, clientName, tokenValue);
+            return SaveToken(token);
+        }
+
+        public Token SaveToken(Token token)
+        {
             return Put<Token>("token", token);
         }
     }
