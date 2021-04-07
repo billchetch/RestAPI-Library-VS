@@ -41,6 +41,14 @@ namespace Chetch.RestAPI.Network
                     return GetString("domain");
                 }
             }
+
+            public int Port
+            {
+                get
+                {
+                    return GetInt("endpoint_port");
+                }
+            }
         }
 
         public class Token : DataObject
