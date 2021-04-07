@@ -8,8 +8,6 @@ using System.Web.Script.Serialization;
 
 namespace Chetch.RestAPI
 {
-    
-
     public class APIService
     {
         private static readonly HttpClient _httpClient = new HttpClient();
