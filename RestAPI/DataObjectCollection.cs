@@ -15,8 +15,7 @@ namespace Chetch.RestAPI
         {
             var list = jsonSerializer.Deserialize<List<T>>(data);
             foreach(var item in list){
-                T t = new T();
-                Add(t);
+                Add(item);
             }
         }
 

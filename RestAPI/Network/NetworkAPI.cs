@@ -42,10 +42,7 @@ namespace Chetch.RestAPI.Network
 
         public class Token : DataObject
         {
-            public Token()
-            {
-
-            }
+            public Token(){}
 
             public Token(int serviceID, String clientName, String tokenValue = null)
             {
@@ -95,7 +92,7 @@ namespace Chetch.RestAPI.Network
             {
                 get
                 {
-                    return ContainsKey("hostname") ? this["hostname"].ToString() : null;
+                    return GetString("hostname");
                 }
 
                 set
@@ -150,6 +147,12 @@ namespace Chetch.RestAPI.Network
         {
             var api = GetInstance();
             return api.GetService(serviceName);
+        }
+
+        static public Host GetNetworkHost(String hostName)
+        {
+            var api = GetInstance();
+            return api.GetHost(hostName);
         }
 
         public NetworkAPI() : this(LOCAL_HOST_PORT) { }
