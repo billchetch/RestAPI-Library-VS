@@ -66,42 +66,6 @@ namespace Chetch.RestAPI.Network
         }
 
 
-        public class Host : DataObject
-        {
-            public IPAddress IP
-            {
-                get
-                {
-                    if (ContainsKey("ip_address"))
-                    {
-                        return IPAddress.Parse(this["ip_address"].ToString());
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-
-                set
-                {
-                    this["ip_address"] = value.ToString();
-                }
-            }
-
-            public String Hostname
-            {
-                get
-                {
-                    return GetString("hostname");
-                }
-
-                set
-                {
-                    this["hostname"] = value;
-                }
-            }
-        }
-
         public class Services : Dictionary<String, Service>, IRestAPIObject
         {
             static private readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
@@ -121,9 +85,7 @@ namespace Chetch.RestAPI.Network
             }
         }
 
-        public class Hosts : DataObjectCollection<Host>, IRestAPIObject
-        {}
-
+        
         static private NetworkAPI _instance;
 
         static public NetworkAPI GetInstance()
@@ -149,12 +111,7 @@ namespace Chetch.RestAPI.Network
             return api.GetService(serviceName);
         }
 
-        static public Host GetNetworkHost(String hostName)
-        {
-            var api = GetInstance();
-            return api.GetHost(hostName);
-        }
-
+        
         public NetworkAPI() : this(LOCAL_HOST_PORT) { }
 
         public NetworkAPI(int port) : this(DEFAULT_PROTOCOL + "://" + LOCAL_HOST + ":" + port + "/api") { }
@@ -197,17 +154,6 @@ namespace Chetch.RestAPI.Network
         public Token SaveToken(Token token)
         {
             return Put<Token>("token", token);
-        }
-
-        public Hosts GetHosts()
-        {
-            return Get<Hosts>("hosts");
-        }
-
-        public Host GetHost(String hostName)
-        {
-            Hosts hosts = GetHosts();
-            return hosts.find("hostname", hostName);
         }
     }
 }
