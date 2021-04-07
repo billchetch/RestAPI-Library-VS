@@ -19,7 +19,7 @@ namespace Chetch.RestAPI.Network
         {
             public String GetBaseURL(String protocol = null)
             {
-                String domain = GetDomain() == null ? LOCAL_HOST : GetDomain();
+                String domain = Domain == null ? LOCAL_HOST : Domain;
                 if(protocol == null)
                 {
                     String[] protocols = GetProtocols();
