@@ -8,44 +8,32 @@ using System.Web.Script.Serialization;
 
 namespace Chetch.RestAPI
 {
-    /*var jsonSerializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-
-
-            try
-            {
-
-            } catch (Exception e)
-{
-    Console.WriteLine(e.Message);
-}
-
-
-int serviceID = 2;
-Dictionary<String, Object> token = new Dictionary<String, Object>();
-token["service_id"] = serviceID;
-token["client_name"] = cn;
-token["token"] = "xsdfasdfa";
-String json = jsonSerializer.Serialize(token);
-var data = new StringContent(json, Encoding.UTF8, "application/json");
-try
-{
-    var response = await httpClient.PutAsync("http://127.0.0.1:8001/api/token", data);
-    int k = 3;
-}
-catch (Exception e)
-{
-    Console.WriteLine(e.Message);
-} */
+    
 
     public class APIService
     {
         private static readonly HttpClient _httpClient = new HttpClient();
         private static readonly JavaScriptSerializer _jsonSerializer = new JavaScriptSerializer();
 
-        public String BaseURL { get; internal set;  }
+        private String _baseURL;
+        public String BaseURL { get
+            {
+                return _baseURL;
+            }
+            set 
+            {
+                _baseURL = value + (value.Last() == '/' ? "" : "/");
+            }
+        }
+
+        public APIService()
+        {
+
+        }
+
         public APIService(String baseURL)
         {
-            BaseURL = baseURL + (baseURL.Last() == '/' ? "" : "/");
+            BaseURL = baseURL;
         }
 
         protected String ApiURL(String stub)

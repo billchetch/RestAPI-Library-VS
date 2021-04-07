@@ -45,6 +45,8 @@
     <Compile Include="APIService.cs" />
     <Compile Include="DataObject.cs" />
     <Compile Include="DataObjectCollection.cs" />
+    <Compile Include="Employees\EmployeesAPI.cs" />
+    <Compile Include="GPS\GPSAPI.cs" />
     <Compile Include="IRestAPIObject.cs" />
     <Compile Include="Network\NetworkAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -24,5 +24,16 @@ namespace Chetch.RestAPI
         {
             throw new NotImplementedException();
         }
+
+        public T find(String fieldName, Object value)
+        {
+            foreach(var t in this)
+            {
+                var val = t.GetValue(fieldName);
+                if (val.Equals(value)) return t;
+            }
+
+            return default(T);
+        }
     }
 }

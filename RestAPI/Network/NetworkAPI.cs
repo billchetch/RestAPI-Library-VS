@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -10,9 +11,33 @@ namespace Chetch.RestAPI.Network
     public class NetworkAPI : APIService
     {
         public const String CHETCH_MESSAGING_SERVICE = "Chetch Messaging";
+        public const String DEFAULT_PROTOCOL = "http";
+        public const String LOCAL_HOST = "127.0.0.1";
+        public const int LOCAL_HOST_PORT = 8001;
 
         public class Service : DataObject
         {
+            public String GetBaseURL(String protocol = null)
+            {
+                String domain = GetDomain() == null ? LOCAL_HOST : GetDomain();
+                if(protocol == null)
+                {
+                    String[] protocols = GetProtocols();
+                    protocol = protocols[0];
+                }
+                return protocol + "://" + domain + ":" + this["endpoint_port"] + "/" + this["endpoint"];
+            }
+
+            public String[] GetProtocols()
+            {
+                String[] protocols = this["protocols"].ToString().Split(',');
+                return protocols;
+            }
+
+            public String GetDomain()
+            {
+                return this["domain"] == null ? null : this["domain"].ToString();
+            }
         }
 
         public class Token : DataObject
@@ -43,6 +68,43 @@ namespace Chetch.RestAPI.Network
             }
         }
 
+
+        public class Host : DataObject
+        {
+            public IPAddress IP
+            {
+                get
+                {
+                    if (ContainsKey("ip_address"))
+                    {
+                        return IPAddress.Parse(this["ip_address"].ToString());
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                set
+                {
+                    this["ip_address"] = value.ToString();
+                }
+            }
+
+            public String Hostname
+            {
+                get
+                {
+                    return ContainsKey("hostname") ? this["hostname"].ToString() : null;
+                }
+
+                set
+                {
+                    this["hostname"] = value;
+                }
+            }
+        }
+
         public class Services : Dictionary<String, Service>, IRestAPIObject
         {
             static private readonly JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
@@ -61,6 +123,38 @@ namespace Chetch.RestAPI.Network
                 throw new NotImplementedException();
             }
         }
+
+        public class Hosts : DataObjectCollection<Host>, IRestAPIObject
+        {}
+
+        static private NetworkAPI _instance;
+
+        static public NetworkAPI GetInstance()
+        {
+            if(_instance == null)
+            {
+                _instance = new NetworkAPI();
+            }
+            return _instance;
+        }
+
+        static public T CreateAPIService<T>(String serviceName) where T : APIService, new()
+        {
+            Service service = GetAPIService(serviceName);
+            var api = new T();
+            api.BaseURL = service.GetBaseURL();
+            return api;
+        }
+
+        static public Service GetAPIService(String serviceName)
+        {
+            var api = GetInstance();
+            return api.GetService(serviceName);
+        }
+
+        public NetworkAPI() : this(LOCAL_HOST_PORT) { }
+
+        public NetworkAPI(int port) : this(DEFAULT_PROTOCOL + "://" + LOCAL_HOST + ":" + port + "/api") { }
 
         public NetworkAPI(String baseURL) : base(baseURL)
         {
@@ -100,6 +194,17 @@ namespace Chetch.RestAPI.Network
         public Token SaveToken(Token token)
         {
             return Put<Token>("token", token);
+        }
+
+        public Hosts GetHosts()
+        {
+            return Get<Hosts>("hosts");
+        }
+
+        public Host GetHost(String hostName)
+        {
+            Hosts hosts = GetHosts();
+            return hosts.find("hostname", hostName);
         }
     }
 }
