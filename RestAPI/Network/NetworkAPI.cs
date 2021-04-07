@@ -34,9 +34,12 @@ namespace Chetch.RestAPI.Network
                 return protocols;
             }
 
-            public String GetDomain()
+            public String Domain
             {
-                return this["domain"] == null ? null : this["domain"].ToString();
+                get
+                {
+                    return GetString("domain");
+                }
             }
         }
 
