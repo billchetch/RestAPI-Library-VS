@@ -99,35 +99,31 @@ namespace Chetch.RestAPI.Network
         
         static private NetworkAPI _instance;
 
-        static public NetworkAPI GetInstance()
+        static public NetworkAPI GetInstance(String baseURL = null)
         {
             if(_instance == null)
             {
-                _instance = new NetworkAPI();
+                _instance = new NetworkAPI(baseURL);
             }
             return _instance;
         }
 
-        static public T CreateAPIService<T>(String serviceName) where T : APIService, new()
+        static public T CreateAPIService<T>(String serviceName, String baseURL = null) where T : APIService, new()
         {
-            Service service = GetAPIService(serviceName);
+            Service service = GetAPIService(serviceName, baseURL);
             var api = new T();
             api.BaseURL = service.GetBaseURL();
             return api;
         }
 
-        static public Service GetAPIService(String serviceName)
+        static public Service GetAPIService(String serviceName, String baseURL = null)
         {
-            var api = GetInstance();
+            var api = GetInstance(baseURL);
             return api.GetService(serviceName);
         }
 
         
-        public NetworkAPI() : this(LOCAL_HOST_PORT) { }
-
-        public NetworkAPI(int port) : this(DEFAULT_PROTOCOL + "://" + LOCAL_HOST + ":" + port + "/api") { }
-
-        public NetworkAPI(String baseURL) : base(baseURL)
+        public NetworkAPI(String baseURL) : base(baseURL == null ? DEFAULT_PROTOCOL + "://" + LOCAL_HOST + ":" + LOCAL_HOST_PORT + "/api" : baseURL)
         {
 
         }
