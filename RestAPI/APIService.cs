@@ -13,6 +13,14 @@ namespace Chetch.RestAPI
         private static readonly HttpClient _httpClient = new HttpClient();
         private static readonly JavaScriptSerializer _jsonSerializer = new JavaScriptSerializer();
 
+        public static void SetHTTPTimeout(int timeout)
+        {
+            if (timeout != _httpClient.Timeout.TotalMilliseconds)
+            {
+                _httpClient.Timeout = TimeSpan.FromMilliseconds(timeout);
+            }
+        }
+
         private String _baseURL;
         public String BaseURL { get
             {
